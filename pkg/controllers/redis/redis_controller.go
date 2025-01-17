@@ -37,7 +37,7 @@ type Reconciler struct {
 func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	instance := &redisv1beta2.Redis{}
 
-	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
+	err := r.Client.Get(ctx, req.NamespacedName, instance)
 	if err != nil {
 		return intctrlutil.RequeueWithErrorChecking(ctx, err, "failed to get redis instance")
 	}
@@ -45,6 +45,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		if err = k8sutils.HandleRedisFinalizer(ctx, r.Client, instance); err != nil {
 			return intctrlutil.RequeueWithError(ctx, err, "failed to handle redis finalizer")
 		}
+
 		return intctrlutil.Reconciled()
 	}
 	if _, found := instance.ObjectMeta.GetAnnotations()["redis.opstreelabs.in/skip-reconcile"]; found {
