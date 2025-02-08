@@ -23,20 +23,24 @@ const (
 
 // HandleRedisFinalizer finalize resource if instance is marked to be deleted
 func HandleRedisFinalizer(ctx context.Context, ctrlclient client.Client, cr *redisv1beta2.Redis) error {
-	if cr.GetDeletionTimestamp() != nil {
-		if controllerutil.ContainsFinalizer(cr, RedisFinalizer) {
-			if cr.Spec.Storage != nil && !cr.Spec.Storage.KeepAfterDelete {
-				if err := finalizeRedisPVC(ctx, ctrlclient, cr); err != nil {
-					return err
-				}
-			}
-			controllerutil.RemoveFinalizer(cr, RedisFinalizer)
-			if err := ctrlclient.Update(ctx, cr); err != nil {
-				log.FromContext(ctx).Error(err, "Could not remove finalizer", "finalizer", RedisFinalizer)
-				return err
-			}
+	if cr.GetDeletionTimestamp() == nil {
+		return nil
+	}
+	if !controllerutil.ContainsFinalizer(cr, RedisFinalizer) {
+		return nil
+	}
+	if cr.Spec.Storage != nil && !cr.Spec.Storage.KeepAfterDelete {
+		if err := finalizeRedisPVC(ctx, ctrlclient, cr); err != nil {
+			return err
 		}
 	}
+
+	controllerutil.RemoveFinalizer(cr, RedisFinalizer)
+	if err := ctrlclient.Update(ctx, cr); err != nil {
+		log.FromContext(ctx).Error(err, "Could not remove finalizer", "finalizer", RedisFinalizer)
+		return err
+	}
+
 	return nil
 }
 
