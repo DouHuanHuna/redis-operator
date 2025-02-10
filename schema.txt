@@ -9,10 +9,14 @@ spec:
         image: string
         pullPolicy: string enum: Always | IfNotPresent | Never
     userAndPassword:
-        user: string default ""
-        password: string default ""
+        name: string
+        key: string
     storage:
         enable: boolean default false
+        volumeMounts:
+            mountPath: string
+            name: string
+
     metrics:
         enable: boolean default false
         image: string
