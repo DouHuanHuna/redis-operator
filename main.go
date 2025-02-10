@@ -177,7 +177,7 @@ func main() {
 
 		wblog := ctrl.Log.WithName("webhook").WithName("PodAffiniytMutate")
 		mgr.GetWebhookServer().Register("/mutate-core-v1-pod", &webhook.Admission{
-			Handler: coreWebhook.NewPodAffiniytMutate(mgr.GetClient(), admission.NewDecoder(scheme), wblog),
+			Handler: coreWebhook.NewPodAffinityMutate(mgr.GetClient(), admission.NewDecoder(scheme), wblog),
 		})
 	}
 	// +kubebuilder:scaffold:builder

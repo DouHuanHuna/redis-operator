@@ -32,15 +32,15 @@ import (
 
 //+kubebuilder:webhook:path=/mutate-core-v1-pod,mutating=true,failurePolicy=fail,sideEffects=None,groups=core,resources=pods,verbs=create,versions=v1,name=ot-mutate-pod.opstree.com,admissionReviewVersions=v1
 
-// PodAntiAffiniytMutate mutate Pods
-type PodAntiAffiniytMutate struct {
+// PodAntiAffinityMutate mutate Pods
+type PodAntiAffinityMutate struct {
 	Client  client.Client
 	decoder *admission.Decoder
 	logger  logr.Logger
 }
 
-func NewPodAffiniytMutate(c client.Client, d *admission.Decoder, log logr.Logger) admission.Handler {
-	return &PodAntiAffiniytMutate{
+func NewPodAffinityMutate(c client.Client, d *admission.Decoder, log logr.Logger) admission.Handler {
+	return &PodAntiAffinityMutate{
 		Client:  c,
 		decoder: d,
 		logger:  log,
@@ -55,7 +55,7 @@ const (
 
 const annotationKeyEnablePodAntiAffinity = "redisclusters.redis.redis.opstreelabs.in/role-anti-affinity"
 
-func (v *PodAntiAffiniytMutate) Handle(ctx context.Context, req admission.Request) admission.Response {
+func (v *PodAntiAffinityMutate) Handle(ctx context.Context, req admission.Request) admission.Response {
 	logger := v.logger.WithValues("Request.Namespace", req.Namespace, "Request.Name", req.Name)
 
 	pod := &corev1.Pod{}
@@ -94,21 +94,21 @@ func (v *PodAntiAffiniytMutate) Handle(ctx context.Context, req admission.Reques
 	return admission.Allowed("")
 }
 
-// PodAntiAffiniytMutate implements admission.DecoderInjector.
+// PodAntiAffinityMutate implements admission.DecoderInjector.
 // A decoder will be automatically injected.
 
 // InjectDecoder injects the decoder.
-func (v *PodAntiAffiniytMutate) InjectDecoder(d *admission.Decoder) error {
+func (v *PodAntiAffinityMutate) InjectDecoder(d *admission.Decoder) error {
 	v.decoder = d
 	return nil
 }
 
-func (m *PodAntiAffiniytMutate) InjectLogger(l logr.Logger) error {
+func (m *PodAntiAffinityMutate) InjectLogger(l logr.Logger) error {
 	m.logger = l
 	return nil
 }
 
-func (v *PodAntiAffiniytMutate) AddPodAntiAffinity(pod *corev1.Pod) {
+func (v *PodAntiAffinityMutate) AddPodAntiAffinity(pod *corev1.Pod) {
 	podName := pod.ObjectMeta.Name
 	antiLabelValue := v.getAntiAffinityValue(podName)
 
@@ -137,14 +137,14 @@ func (v *PodAntiAffiniytMutate) AddPodAntiAffinity(pod *corev1.Pod) {
 	pod.Spec.Affinity.PodAntiAffinity.RequiredDuringSchedulingIgnoredDuringExecution = append(pod.Spec.Affinity.PodAntiAffinity.RequiredDuringSchedulingIgnoredDuringExecution, addAntiAffinity)
 }
 
-func (v *PodAntiAffiniytMutate) getPodAnnotations(pod *corev1.Pod) map[string]string {
+func (v *PodAntiAffinityMutate) getPodAnnotations(pod *corev1.Pod) map[string]string {
 	if pod.Annotations == nil {
 		pod.Annotations = make(map[string]string)
 	}
 	return pod.Annotations
 }
 
-func (v *PodAntiAffiniytMutate) isRedisClusterPod(pod *corev1.Pod) bool {
+func (v *PodAntiAffinityMutate) isRedisClusterPod(pod *corev1.Pod) bool {
 	annotations := v.getPodAnnotations(pod)
 	if _, ok := annotations[podAnnotationsRedisClusterApp]; !ok {
 		return false
@@ -158,7 +158,7 @@ func (v *PodAntiAffiniytMutate) isRedisClusterPod(pod *corev1.Pod) bool {
 	return true
 }
 
-func (v *PodAntiAffiniytMutate) getAntiAffinityValue(podName string) string {
+func (v *PodAntiAffinityMutate) getAntiAffinityValue(podName string) string {
 	if strings.Contains(podName, "follower") {
 		return strings.Replace(podName, "follower", "leader", -1)
 	}

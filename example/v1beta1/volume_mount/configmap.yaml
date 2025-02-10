@@ -6,4 +6,4 @@ metadata:
   labels:
     app: myapplication
 data:
-  my-key: my-value
+  my-key: "my-value"

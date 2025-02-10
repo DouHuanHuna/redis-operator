@@ -24,7 +24,7 @@ func TestPodAntiAffinityMutate_Handle(t *testing.T) {
 	decoder := admission.NewDecoder(scheme)
 	logger := zap.New(zap.WriteTo(nil))
 
-	mutator := NewPodAffiniytMutate(fakeClient, decoder, logger)
+	mutator := NewPodAffinityMutate(fakeClient, decoder, logger)
 
 	tests := []struct {
 		name            string
