@@ -23,6 +23,6 @@ keywords:
 dependencies:
   - name: cert-manager
     version: v1.12.4
-    repository: https://charts.jetstack.io
+    repository: http://localhost:8080
     alias: certmanager
     condition: certmanager.enabled
