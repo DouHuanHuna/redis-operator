@@ -1,0 +1,21 @@
+apiVersion: redis.k8s.io/v1
+kind: RedisOperator
+metadata:
+    name: string
+    namespace: string default "redis-operator"
+spec:
+    model: string enum: Cluster | Sentinel | Standalone | MasterSlave
+    containers:
+        image: string
+        pullPolicy: string enum: Always | IfNotPresent | Never
+    userAndPassword:
+        user: string default ""
+        password: string default ""
+    storage:
+        enable: boolean default false
+    metrics:
+        enable: boolean default false
+        image: string
+        pullPolicy: string enum: Always | IfNotPresent | Never
+states:
+    state: string enum: Pending | Running | Succeeded | Failed

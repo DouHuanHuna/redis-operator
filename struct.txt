@@ -1,0 +1,8 @@
+.
+    -- api: the schema of redis-operator
+    -- charts: the helm chart of redis-operator
+    -- dashboards: the grafana dashboard of redis-operator
+    -- example: the example of redis-operator
+    -- pkg: the core code of redis-operator
+        -- controller: the controller of redis-operator
+        -- webhook: the webhook of redis-operator
