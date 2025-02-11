@@ -35,7 +35,9 @@ type RedisSentinelConfig struct {
 	common.RedisSentinelConfig `json:",inline"`
 }
 
-type RedisSentinelStatus struct{}
+type RedisSentinelStatus struct {
+	ReadyReplicas int `json:"readyReplicas,omitempty"`
+}
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status

@@ -37,7 +37,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-// Reconciler reconciles a RedisCluster object
+// Reconciler reconciles a MODEL_TYPE object
 type Reconciler struct {
 	client.Client
 	k8sutils.StatefulSet
@@ -207,7 +207,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		logger.Error(err, "failed to determine unhealthy node count in cluster")
 	}
 	if int(totalReplicas) > 1 && unhealthyNodeCount >= int(totalReplicas)-1 {
-		err = k8sutils.UpdateRedisClusterStatus(ctx, instance, status.RedisClusterFailed, "RedisCluster has too many unhealthy nodes", leaderReplicas, followerReplicas, r.Dk8sClient)
+		err = k8sutils.UpdateRedisClusterStatus(ctx, instance, status.RedisClusterFailed, "MODEL_TYPE has too many unhealthy nodes", leaderReplicas, followerReplicas, r.Dk8sClient)
 		if err != nil {
 			return intctrlutil.RequeueWithError(ctx, err, "")
 		}

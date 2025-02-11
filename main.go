@@ -134,7 +134,7 @@ func main() {
 		Recorder:    mgr.GetEventRecorderFor("rediscluster-controller"),
 		StatefulSet: k8sutils.NewStatefulSetService(k8sclient),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "RedisCluster")
+		setupLog.Error(err, "unable to create controller", "controller", "MODEL_TYPE")
 		os.Exit(1)
 	}
 	if err = (&redisreplication.Reconciler{
@@ -163,7 +163,7 @@ func main() {
 			os.Exit(1)
 		}
 		if err = (&redisv1beta2.RedisCluster{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "RedisCluster")
+			setupLog.Error(err, "unable to create webhook", "webhook", "MODEL_TYPE")
 			os.Exit(1)
 		}
 		if err = (&redisv1beta2.RedisReplication{}).SetupWebhookWithManager(mgr); err != nil {

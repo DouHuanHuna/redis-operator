@@ -300,7 +300,7 @@ func TestRedisClusterAsOwner(t *testing.T) {
 	clusterObj := &redisv1beta2.RedisCluster{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "redisv1beta2/apiVersion",
-			Kind:       "RedisCluster",
+			Kind:       "MODEL_TYPE",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "test-redis-cluster",
@@ -310,7 +310,7 @@ func TestRedisClusterAsOwner(t *testing.T) {
 
 	expectedOwnerReference := metav1.OwnerReference{
 		APIVersion: "redisv1beta2/apiVersion",
-		Kind:       "RedisCluster",
+		Kind:       "MODEL_TYPE",
 		Name:       "test-redis-cluster",
 		UID:        "abcdef",
 		Controller: ptr.To(true),

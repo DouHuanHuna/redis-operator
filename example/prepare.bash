@@ -16,6 +16,8 @@ helm install redis-sentinel repo/redis-sentinel \
   --set redissentinel.clusterSize=3  --namespace redis-operators \
   --set redisSentinelConfig.redisReplicationName="redis-replication"
 
+kubectl get redissentinels.redis.redis.opstreelabs.in -A
+
 helm uninstall redis-sentinel --namespace redis-operators
 
 mkdir -p /tmp/k8s-webhook-server/serving-certs/

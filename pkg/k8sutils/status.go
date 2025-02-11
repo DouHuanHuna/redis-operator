@@ -14,7 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-// UpdateRedisClusterStatus will update the status of the RedisCluster
+// UpdateRedisClusterStatus will update the status of the ModelType
 func UpdateRedisClusterStatus(ctx context.Context, cr *redisv1beta2.RedisCluster, state status.RedisClusterState, reason string, readyLeaderReplicas, readyFollowerReplicas int32, dcl dynamic.Interface) error {
 	newStatus := redisv1beta2.RedisClusterStatus{
 		State:                 state,

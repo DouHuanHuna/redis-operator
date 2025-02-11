@@ -5,21 +5,51 @@ metadata:
     namespace: string default "redis-operator"
 spec:
     model: string enum: Cluster | Sentinel | Standalone | MasterSlave
-    containers:
-        image: string
-        pullPolicy: string enum: Always | IfNotPresent | Never
-    userAndPassword:
-        name: string
-        key: string
-    storage:
-        enable: boolean default false
-        volumeMounts:
-            mountPath: string
-            name: string
-
-    metrics:
-        enable: boolean default false
-        image: string
-        pullPolicy: string enum: Always | IfNotPresent | Never
+    config: map[string]string
+    auth: v1.AuthSettings
+    settings: v1.RedisSettings
+    resources: core.v1.ResourceRequirements
 states:
     state: string enum: Pending | Running | Succeeded | Failed
+---
+type Metrics struct {
+    enable: boolean default false
+    image: string
+    pullPolicy: string enum: Always | IfNotPresent | Never
+    port: int
+}
+---
+type AuthSettings struct {
+    password: string
+    secret: string
+}
+---
+type RedisSettings struct {
+    image: string
+    pullPolicy: string enum: Always | IfNotPresent | Never
+    metrics: v1.Metrics
+    standalone: v1.StandaloneSettings
+    cluster: v1.ClusterSettings
+    sentinel: v1.SentinelSettings
+    Affinity: corev1.Affinity
+}
+---
+type StandaloneSettings struct {
+
+}
+
+---
+type ClusterSettings struct {
+    replicas: int
+}
+
+---
+type SentinelSettings struct {
+    replicas: int
+}
+
+---
+type MasterSlaveSettings struct {
+    MasterCount: int
+    SlaveCount: int
+}

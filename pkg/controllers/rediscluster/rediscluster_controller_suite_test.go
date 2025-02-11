@@ -55,7 +55,7 @@ const (
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
 
-	RunSpecs(t, "RedisCluster Controller suite")
+	RunSpecs(t, "MODEL_TYPE Controller suite")
 }
 
 var _ = BeforeSuite(func() {
