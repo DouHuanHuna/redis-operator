@@ -14,6 +14,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
+const (
+	ModelType = "redis-cluster"
+	Suffix    = "sts"
+)
+
 // RedisClusterSTS is a interface to call Redis Statefulset function
 type RedisClusterSTS struct {
 	RedisStateFulType             string
@@ -276,7 +281,7 @@ func (service RedisClusterSTS) getReplicaCount(cr *redisv1beta2.RedisCluster) in
 
 // CreateRedisClusterSetup will create Redis Setup for leader and follower
 func (service RedisClusterSTS) CreateRedisClusterSetup(ctx context.Context, cr *redisv1beta2.RedisCluster, cl kubernetes.Interface) error {
-	stateFulName := cr.ObjectMeta.Name + "-" + service.RedisStateFulType
+	stateFulName := ModelType + "-" + service.RedisStateFulType + "-" + Suffix
 	labels := getRedisLabels(stateFulName, cluster, service.RedisStateFulType, cr.ObjectMeta.Labels)
 	annotations := generateStatefulSetsAnots(cr.ObjectMeta, cr.Spec.KubernetesConfig.IgnoreAnnotations)
 	objectMetaInfo := generateObjectMetaInformation(stateFulName, cr.Namespace, labels, annotations)
