@@ -15,8 +15,10 @@ import (
 )
 
 const (
-	ModelType = "redis-cluster"
-	Suffix    = "sts"
+	ModelType    = "redis-cluster"
+	Suffix       = "sts"
+	LeaderType   = "leader"
+	FollowerType = "follower"
 )
 
 // RedisClusterSTS is a interface to call Redis Statefulset function
@@ -222,7 +224,7 @@ func generateRedisClusterContainerParams(ctx context.Context, cl kubernetes.Inte
 // CreateRedisLeader will create a leader redis setup
 func CreateRedisLeader(ctx context.Context, cr *redisv1beta2.RedisCluster, cl kubernetes.Interface) error {
 	prop := RedisClusterSTS{
-		RedisStateFulType:             "leader",
+		RedisStateFulType:             LeaderType,
 		Resources:                     cr.Spec.GetRedisLeaderResources(),
 		SecurityContext:               cr.Spec.RedisLeader.SecurityContext,
 		Affinity:                      cr.Spec.RedisLeader.Affinity,
@@ -243,7 +245,7 @@ func CreateRedisLeader(ctx context.Context, cr *redisv1beta2.RedisCluster, cl ku
 // CreateRedisFollower will create a follower redis setup
 func CreateRedisFollower(ctx context.Context, cr *redisv1beta2.RedisCluster, cl kubernetes.Interface) error {
 	prop := RedisClusterSTS{
-		RedisStateFulType:             "follower",
+		RedisStateFulType:             FollowerType,
 		Resources:                     cr.Spec.GetRedisFollowerResources(),
 		SecurityContext:               cr.Spec.RedisFollower.SecurityContext,
 		Affinity:                      cr.Spec.RedisFollower.Affinity,
