@@ -2,6 +2,8 @@ kubectl apply --server-side -f config/crd/bases/
 
 kubectl create ns redis-operators
 
+helm package
+
 helm install redis-operator repo/redis-operator --namespace redis-operators
 
 helm uninstall redis-operator --namespace redis-operators

@@ -11,7 +11,7 @@ spec:
     runAsUser: 1000
     fsGroup: 1000
   kubernetesConfig:
-    image: quay.io/opstree/redis:v7.0.5
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/quay.io/opstree/redis:v7.0.5
     imagePullPolicy: IfNotPresent
     resources:
       requests:
@@ -20,9 +20,9 @@ spec:
       limits:
         cpu: 101m
         memory: 128Mi
-    redisSecret:
-      name: redis-secret
-      key: password
+#    redisSecret:
+#      name: redis-secret
+#      key: password
       # imagePullSecrets:
       #   - name: regcred
   redisExporter:

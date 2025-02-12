@@ -15,7 +15,10 @@ endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
 # Image URL to use all building/pushing image targets
-IMG ?= quay.io/opstree/redis-operator:v$(VERSION)
+#IMG ?= quay.io/opstree/redis-operator:v$(VERSION)
+#IMG ?= ghcr.io/ot-container-kit/redis-operator/redis-operator:v$(VERSION)
+#IMG ?= swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/ot-container-kit/redis-operator/redis-operator:v$(VERSION)
+IMG ?= swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/ot-container-kit/redis-operator/redis-operator:v0.18.1
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))

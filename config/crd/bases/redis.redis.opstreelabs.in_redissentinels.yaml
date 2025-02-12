@@ -1997,6 +1997,9 @@ spec:
             - kubernetesConfig
             type: object
           status:
+            properties:
+              readyReplicas:
+                type: integer
             type: object
         required:
         - spec
