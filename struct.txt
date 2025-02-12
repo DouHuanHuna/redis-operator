@@ -11,30 +11,44 @@ controller
     redisoperator_controller.go
     standalone
         reconcile_standalone.go
-        - func  ReconcileStandalone  (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+        - type ReconcileStandalone struct { r *ReconcileRedisOperator, ctx context.Context }
+        - func (r *ReconcileStandalone)Reconcile() (ctrl.Result, error)
     cluster
         reconcile_cluster.go
-        - func x ReconcileCluster (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+        - type ReconcileCluster struct { r *ReconcileRedisOperator, ctx context.Context }
     replication
         reconcile_replication.go
-        - func  ReconcileReplication (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+        - type ReconcileReplication struct { r *ReconcileRedisOperator, ctx context.Context }
     sentinel
         reconcile_sentinel.go
-        - func  ReconcileSentinel (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
     factory
         factory.go
         - func OperatorFactory
     service
-        service.go
+           pod.go
+           - type PodService interface { CreatePod, DeletePod, GetPod, UpdatePod }
+           sts.go
+           - type StatefulSetService interface { CreateStatefulSet, DeleteStatefulSet, GetStatefulSet, UpdateStatefulSet }
+           svc.go
+           - type ServiceService interface { CreateService, DeleteService, GetService, UpdateService }
+
 
 
 ---
 
 var reconcileFuncs = map[string]func(*ReconcileRedisOperator, context.Context) (ctrl.Result, error){
-    "Standalone":  ReconcileStandalone,
-    "Cluster":     ReconcileCluster,
-    "Replication": ReconcileReplication,
-    "Sentinel":    ReconcileSentinel,
+    "Standalone": func(r *ReconcileRedisOperator, ctx context.Context) (reconcile.Result, error) {
+    		return (&ReconcileStandalone{r: r, ctx: ctx}).Reconcile
+    	},
+    	"Cluster": func(r *ReconcileRedisOperator, ctx context.Context) (reconcile.Result, error) {
+    		return (&ReconcileCluster{r: r, ctx: ctx}).Reconcile
+    	},
+    	"Replication": func(r *ReconcileRedisOperator, ctx context.Context) (reconcile.Result, error) {
+    		return (&ReconcileReplication{r: r, ctx: ctx}).Reconcile
+    	},
+    	"Sentinel": func(r *ReconcileRedisOperator, ctx context.Context) (reconcile.Result, error) {
+    		return (&ReconcileSentinel{r: r, ctx: ctx}).Reconcile
+    	},
 }
 
 func ReconcileFactory(kind string) func(*ReconcileRedisOperator, context.Context) (ctrl.Result, error) {
