@@ -4,9 +4,6 @@ metadata:
     name: string
     namespace: string default "redis-operator"
 spec:
-    model: string enum: Cluster | Sentinel | Standalone | MasterSlave
-    config: map[string]string
-    auth: v1.AuthSettings
     settings: v1.RedisSettings
     resources: core.v1.ResourceRequirements
 states:
@@ -25,6 +22,9 @@ type AuthSettings struct {
 }
 ---
 type RedisSettings struct {
+    model: string enum: Cluster | Sentinel | Standalone | MasterSlave
+    config: map[string]string
+    auth: *v1.AuthSettings
     image: string
     pullPolicy: string enum: Always | IfNotPresent | Never
     metrics: v1.Metrics
@@ -38,6 +38,12 @@ type RedisSettings struct {
 ---
 type StandaloneSettings struct {
 
+}
+
+type Storage struct {
+	KeepAfterDelete     bool                         `json:"keepAfterDelete,omitempty"`
+	VolumeClaimTemplate corev1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+	VolumeMount         AdditionalVolume             `json:"volumeMount,omitempty"`
 }
 
 ---
