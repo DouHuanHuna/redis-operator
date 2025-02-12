@@ -2,7 +2,7 @@
 redisSentinel:
   name: ""
   clusterSize: 3
-  image: quay.io/opstree/redis-sentinel
+  image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/quay.io/opstree/redis-sentinel
   tag: v7.0.15
   imagePullPolicy: IfNotPresent
   imagePullSecrets: [ ]
