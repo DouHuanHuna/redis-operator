@@ -1,8 +1,75 @@
-.
     -- api: the schema of redis-operator
     -- charts: the helm chart of redis-operator
     -- dashboards: the grafana dashboard of redis-operator
     -- example: the example of redis-operator
-    -- pkg: the core code of redis-operator
+    -- internal: the core code of redis-operator
         -- controller: the controller of redis-operator
         -- webhook: the webhook of redis-operator
+
+
+controller
+    redisoperator_controller.go
+    standalone
+        reconcile_standalone.go
+        - func  ReconcileStandalone  (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+    cluster
+        reconcile_cluster.go
+        - func x ReconcileCluster (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+    replication
+        reconcile_replication.go
+        - func  ReconcileReplication (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+    sentinel
+        reconcile_sentinel.go
+        - func  ReconcileSentinel (r *ReconcileRedisOperator, ctx context.Context) (ctrl.Result, error)
+    factory
+        factory.go
+        - func OperatorFactory
+    service
+        service.go
+
+
+---
+
+var reconcileFuncs = map[string]func(*ReconcileRedisOperator, context.Context) (ctrl.Result, error){
+    "Standalone":  ReconcileStandalone,
+    "Cluster":     ReconcileCluster,
+    "Replication": ReconcileReplication,
+    "Sentinel":    ReconcileSentinel,
+}
+
+func ReconcileFactory(kind string) func(*ReconcileRedisOperator, context.Context) (ctrl.Result, error) {
+    return reconcileFuncs[kind]
+}
+
+---
+
+
+type RedisOperatorReconciler struct {
+    client.Client
+    Logger    logr.Logger
+    Scheme *runtime.Scheme
+}
+
+
+func (r *RedisOperatorReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+    r.Logger = log.FromContext(context)
+
+    // Fetch the RedisOperator instance
+    instance := &redisv1alpha1.RedisOperator{}
+    err := r.Get(ctx, req.NamespacedName, instance)
+    if err != nil {
+        if errors.IsNotFound(err) {
+            // Request object not found, could have been deleted after reconcile request.
+            // Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
+            // Return and don't requeue
+            return ctrl.Result{}, nil
+        }
+        // Error reading the object - requeue the request.
+        return ctrl.Result{}, err
+    }
+
+    // Reconcile the RedisOperator
+    reconcileFunc := factory.OperatorFactory(instance.Spec.Kind)
+    return reconcileFunc(&ReconcileRedisOperator{Client: r.Client, Log: log, Scheme: r.Scheme}, ctx)
+}
+
