@@ -32,6 +32,8 @@ type RedisSettings struct {
     cluster: v1.ClusterSettings
     sentinel: v1.SentinelSettings
     Affinity: corev1.Affinity
+    SecurityContext: corev1.SecurityContext
+    InitCommand: string
 }
 ---
 type StandaloneSettings struct {
